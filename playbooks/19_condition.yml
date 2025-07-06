@@ -1,0 +1,8 @@
+- name: Step 16 - Conditional Tasks
+  hosts: all
+  become: true
+  tasks:
+    - name: Only run if memory > 1GB
+      debug:
+        msg: "Sufficient RAM"
+      when: ansible_memtotal_mb > 1024

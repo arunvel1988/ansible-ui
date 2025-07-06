@@ -1,0 +1,43 @@
+docker run -d --name ubuntu-node1 --hostname ubuntu-node1 ubuntu sleep infinity
+docker run -d --name ubuntu-node2 --hostname ubuntu-node2 ubuntu sleep infinity
+
+
+docker exec -it ubuntu-node1 bash
+apt update && apt install -y openssh-server python3 sudo
+useradd -m -s /bin/bash arun && echo 'arun:arun' | chpasswd && service ssh start && exit
+
+docker exec -it ubuntu-node2 bash
+apt update && apt install -y openssh-server python3 sudo
+useradd -m -s /bin/bash arun && echo 'arun:arun' | chpasswd && service ssh start && exit
+
+
+#on host machine
+ssh-keygen -t rsa -f ~/.ssh/id_rsa -N ""  # If not already present
+
+docker cp ~/.ssh/id_rsa.pub ubuntu-node1:/tmp/id_rsa.pub
+docker exec -it ubuntu-node1 bash -c "mkdir -p ~arun/.ssh && cat /tmp/id_rsa.pub >> ~arun/.ssh/authorized_keys && chown -R arun:arun ~arun/.ssh"
+
+
+docker cp ~/.ssh/id_rsa.pub ubuntu-node2:/tmp/id_rsa.pub
+docker exec -it ubuntu-node1 bash -c "mkdir -p ~arun/.ssh && cat /tmp/id_rsa.pub >> ~arun/.ssh/authorized_keys && chown -R arun:arun ~arun/.ssh"
+
+
+
+
+#########################################################
+
+inventory.yml
+
+plugin: community.docker.docker
+strict: false
+compose:
+  ansible_host: docker_host
+
+###########################################
+
+ansible-navigator exec --execution-environment-image postgresql_ee:latest -- bash
+
+
+ansible-galaxy collection install community.docker
+
+ansible-inventory -i inventory.yml --list

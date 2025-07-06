@@ -1,0 +1,7 @@
+---
+- name: Gather System Info
+  hosts: all
+  tasks:
+    - name: Display Hostname and OS
+      debug:
+        msg: "This system is running {{ ansible_distribution }} with hostname {{ ansible_hostname }}"

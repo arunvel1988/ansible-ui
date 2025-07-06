@@ -1,0 +1,9 @@
+- name: Extract a tar.gz file
+  hosts: all
+  become: true
+  tasks:
+    - name: Unpack archive
+      unarchive:
+        src: /tmp/archive.tar.gz
+        dest: /opt/
+        remote_src: yes

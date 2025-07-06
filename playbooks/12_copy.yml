@@ -1,0 +1,9 @@
+- name: Step 7 - Copy Files
+  hosts: all
+  become: true
+  tasks:
+    - name: Copy script
+      copy:
+        src: ./hello.sh
+        dest: /usr/local/bin/hello.sh
+        mode: '0755'

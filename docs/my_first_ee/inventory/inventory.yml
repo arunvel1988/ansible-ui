@@ -1,0 +1,6 @@
+
+plugin: community.docker.docker_containers
+filter:
+  image: ubuntu
+compose:
+  ansible_host: NetworkSettings.Networks.bridge.IPAddress

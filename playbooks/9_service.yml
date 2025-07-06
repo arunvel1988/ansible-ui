@@ -1,0 +1,9 @@
+- name: Step 4 - Manage Services
+  hosts: all
+  become: true
+  tasks:
+    - name: Start and enable nginx
+      service:
+        name: nginx
+        state: started
+        enabled: true

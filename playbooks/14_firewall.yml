@@ -1,0 +1,16 @@
+- name: Step 11 - Firewall Rules
+  hosts: all
+  become: true
+  tasks:
+    - name: Allow SSH on RHEL
+      firewalld:
+        service: ssh
+        state: enabled
+        permanent: yes
+      when: ansible_os_family == "RedHat"
+
+    - name: Allow SSH on Debian
+      ufw:
+        rule: allow
+        name: OpenSSH
+      when: ansible_os_family == "Debian"

@@ -1,0 +1,7 @@
+
+- name: Test connection to Docker container
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ping the container via SSH
+      ansible.builtin.ping:

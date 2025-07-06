@@ -1,0 +1,9 @@
+- name: Download a script from the web
+  hosts: all
+  become: true
+  tasks:
+    - name: Fetch script
+      get_url:
+        url: https://raw.githubusercontent.com/myorg/setup.sh
+        dest: /tmp/setup.sh
+        mode: '0755'

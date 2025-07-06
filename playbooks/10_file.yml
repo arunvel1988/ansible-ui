@@ -1,0 +1,14 @@
+- name: Step 5 - File and Directory Operations
+  hosts: all
+  become: true
+  tasks:
+    - name: Create directory
+      file:
+        path: /opt/devops-lab
+        state: directory
+        mode: '0755'
+
+    - name: Touch a file
+      file:
+        path: /opt/devops-lab/demo.txt
+        state: touch

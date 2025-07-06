@@ -1,0 +1,15 @@
+- name: Step 3 - Install Packages
+  hosts: all
+  become: true
+  tasks:
+    - name: Install curl on Debian
+      apt:
+        name: curl
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Install curl on RHEL
+      yum:
+        name: curl
+        state: present
+      when: ansible_os_family == "RedHat"

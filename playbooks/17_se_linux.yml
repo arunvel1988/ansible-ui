@@ -1,0 +1,8 @@
+- name: Step 14 - Set SELinux
+  hosts: all
+  become: true
+  tasks:
+    - name: Set to permissive (RHEL only)
+      selinux:
+        state: permissive
+      when: ansible_os_family == "RedHat"

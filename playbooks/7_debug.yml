@@ -1,0 +1,21 @@
+---
+- name: Step 1 - Debug Module Example
+  hosts: all
+  gather_facts: yes
+  tasks:
+
+    - name: Show a custom message
+      debug:
+        msg: "Welcome to Ansible automation training!"
+
+    - name: Show the OS distribution name
+      debug:
+        msg: "This system is running {{ ansible_distribution }}"
+
+    - name: Show full variable details
+      debug:
+        var: ansible_facts
+
+    - name: Show just the hostname
+      debug:
+        var: ansible_hostname

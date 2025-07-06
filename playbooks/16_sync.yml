@@ -1,0 +1,9 @@
+- name: Step 13 - Sync Files
+  hosts: all
+  become: true
+  tasks:
+    - name: Sync /data from control to remote
+      synchronize:
+        src: /data/
+        dest: /opt/data/
+        delete: yes

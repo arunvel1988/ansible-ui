@@ -1,0 +1,126 @@
+sudo dnf install -y podman python3 python3-pip
+
+OR
+
+sudo apt install -y podman python3 python3-pip
+
+
+pip3 install ansible-navigator
+
+pip3 install ansible-builder
+
+ansible-navigator --version
+ansible-builder --version
+
+mkdir my_first_ee && cd my_first_ee
+
+
+execution-environment.yml
+
+version: 3
+
+images:
+  base_image:
+    name: registry.fedoraproject.org/fedora:42
+
+dependencies:
+  python_interpreter:
+    package_system: python3
+  ansible_core:
+    package_pip: ansible-core
+  ansible_runner:
+    package_pip: ansible-runner
+  system:
+  - openssh-clients
+  - sshpass
+  galaxy:
+    collections:
+    - name: community.postgresql
+
+
+
+ansible-builder build --tag postgresql_ee
+
+
+test_localhost.yml
+
+- name: Gather and print local facts
+  hosts: localhost
+  become: true
+  gather_facts: true
+  tasks:
+
+   - name: Print facts
+     ansible.builtin.debug:
+      var: ansible_facts
+
+
+ansible-navigator run test_localhost.yml --execution-environment-image postgresql_ee --mode stdout --pull-policy missing --container-options='--user=0'
+
+
+mkdir inventory
+
+
+all:
+  hosts:
+    192.168.0.2  # Replace with the IP of your target host
+
+
+test_remote.yml
+
+- name: Gather and print facts
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+
+   - name: Print facts
+     ansible.builtin.debug:
+      var: ansible_facts
+
+
+
+##### on ubuntu hosts
+# sudo apt update
+#sudo apt install openssh-server -y
+#sudo systemctl enable --now ssh
+#
+
+
+##############################################3
+
+# ansible-navigator exec   --execution-environment-image postgresql_ee:latest   --pull-policy missing   -- bash
+
+# on execution container
+#dnf install -y openssh-clients
+# ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""
+# ssh-copy-id arun@192.168.0.106
+
+
+#####
+
+
+
+
+ansible-navigator run test_remote.yml -i inventory --execution-environment-image postgresql_ee:latest --mode stdout --pull-policy missing --enable-prompts -u student -k -K
+
+
+ansible-navigator collections --execution-environment-image ghcr.io/ansible-community/community-ee-base:latest
+
+ansible-navigator exec "ansible localhost -m setup" --execution-environment-image ghcr.io/ansible-community/community-ee-minimal:latest --mode stdout
+
+- name: Gather and print local facts
+  hosts: localhost
+  become: true
+  gather_facts: true
+  tasks:
+
+   - name: Print facts
+     ansible.builtin.debug:
+      var: ansible_facts
+
+
+
+ansible-navigator run test_localhost.yml --execution-environment-image ghcr.io/ansible-community/community-ee-minimal:latest --mode stdout
+
+

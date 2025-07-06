@@ -1,0 +1,15 @@
+- name: Pause and Check OS Version
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Wait 5 seconds before OS version check
+      pause:
+        seconds: 5
+
+    - name: Fail if not Ubuntu 22.04
+      assert:
+        that:
+          - ansible_distribution == "Ubuntu"
+          - ansible_distribution_version == "22.04"
+        fail_msg: "This playbook only supports Ubuntu 22.04"
+        success_msg: "Ubuntu 22.04 confirmed"

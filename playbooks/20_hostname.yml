@@ -1,0 +1,7 @@
+- name: Set hostname
+  hosts: all
+  become: true
+  tasks:
+    - name: Set a new hostname
+      hostname:
+        name: web-node-01

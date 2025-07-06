@@ -1,0 +1,61 @@
+#ansible inventory
+
+
+/etc/ansible/hosts
+
+-i ./hosts
+
+hosts.ini
+[webservers]
+host1
+host2
+host3
+
+[dbservers]
+host3
+host4
+
+[atlanta]
+host1
+host4
+
+[staging]
+host2
+host3
+
+########################################
+
+
+ansible all -m ping
+
+
+ansible '*' -m ping
+
+
+ansible host1 -m ping
+
+
+
+ansible host1:host2 -m ping
+
+
+ansible host1,host2 -m ping
+
+
+ansible webservers -m ping
+
+
+ansible webservers:dbservers -m ping
+
+#other than atlanta
+ansible 'webservers:!atlanta' -m ping
+
+
+# Hosts common to both webservers and staging.
+ansible 'webservers:&staging' -m ping
+
+
+
+#################################################################
+
+

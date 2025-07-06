@@ -1,0 +1,6 @@
+- name: Test ping Ubuntu Docker containers
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Ping target
+      ansible.builtin.ping

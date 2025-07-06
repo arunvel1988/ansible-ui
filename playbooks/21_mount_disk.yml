@@ -1,0 +1,10 @@
+- name: Mount a disk
+  hosts: all
+  become: true
+  tasks:
+    - name: Mount /dev/sdb1 to /data
+      mount:
+        path: /data
+        src: /dev/sdb1
+        fstype: ext4
+        state: mounted

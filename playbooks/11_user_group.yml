@@ -1,0 +1,14 @@
+- name: Step 6 - Manage Users and Groups
+  hosts: all
+  become: true
+  tasks:
+    - name: Create group 'devops'
+      group:
+        name: devops
+        state: present
+
+    - name: Create user 'devops'
+      user:
+        name: devops
+        group: devops
+        shell: /bin/bash

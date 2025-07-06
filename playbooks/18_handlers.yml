@@ -1,0 +1,15 @@
+- name: Step 15 - Handlers and Notify
+  hosts: all
+  become: true
+  tasks:
+    - name: Copy nginx config
+      copy:
+        src: nginx.conf
+        dest: /etc/nginx/nginx.conf
+      notify: restart nginx
+
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted

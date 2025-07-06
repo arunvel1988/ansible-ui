@@ -1,0 +1,9 @@
+- name: Ensure DNS entry
+  hosts: all
+  become: true
+  tasks:
+    - name: Add DNS to resolv.conf
+      lineinfile:
+        path: /etc/resolv.conf
+        line: "nameserver 8.8.8.8"
+        state: present

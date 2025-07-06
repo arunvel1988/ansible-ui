@@ -1,0 +1,9 @@
+- name: Step 12 - Run Commands
+  hosts: all
+  become: true
+  tasks:
+    - name: Use command module
+      command: uptime
+
+    - name: Use shell module
+      shell: echo "Hello from $(hostname)" > /tmp/test.txt

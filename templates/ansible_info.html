@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ansible Overview</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #f4f6f8;
+            padding: 50px;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #007bff;
+        }
+        .btn {
+            display: inline-block;
+            margin: 20px 10px 0 0;
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .btn-back {
+            margin-top: 30px;
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📘 Ansible Overview</h1>
+        <p>
+            <strong>Ansible</strong> is an open-source automation tool used for configuration management, application deployment, and task automation.
+        </p>
+        <ul>
+            <li>✅ <strong>Controller Node:</strong> The machine where Ansible is installed and from where all tasks are executed.</li>
+            <li>✅ <strong>Worker Nodes:</strong> Target systems managed over SSH or WinRM, without needing any agent installed.</li>
+            <li>🚀 <strong>Execution Environment:</strong> A container-based solution to package dependencies using <code>ansible-navigator</code> and <code>ansible-builder</code>.</li>
+        </ul>
+
+        <p>How would you like to proceed?</p>
+        <a class="btn" href="/ansible/local">🖥️ Local Ansible Installation</a>
+        <a class="btn" href="/ansible/execution-environment">📦 Execution Environment</a>
+        <br>
+        <a class="btn-back" href="/">⬅ Back to Home</a>
+       
+    </div>
+</body>
+</html>
