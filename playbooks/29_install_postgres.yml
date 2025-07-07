@@ -1,0 +1,35 @@
+---
+- name: Install PostgreSQL and create DB/user
+  hosts: all
+  become: yes
+  vars:
+    postgres_user: student
+    postgres_password: student123
+    db_name: labdb
+
+  tasks:
+    - name: Install PostgreSQL
+      apt:
+        name: postgresql
+        state: present
+        update_cache: yes
+
+    - name: Ensure PostgreSQL is running
+      service:
+        name: postgresql
+        state: started
+        enabled: true
+
+    - name: Create a DB user
+      become_user: postgres
+      postgresql_user:
+        name: "{{ postgres_user }}"
+        password: "{{ postgres_password }}"
+        state: present
+
+    - name: Create a new database
+      become_user: postgres
+      postgresql_db:
+        name: "{{ db_name }}"
+        owner: "{{ postgres_user }}"
+        state: present
