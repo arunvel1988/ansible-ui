@@ -1,0 +1,25 @@
+- name: Install Apache
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+
+- name: Deploy Apache config
+  template:
+    src: apache.conf.j2
+    dest: /etc/apache2/ports.conf
+  notify: Restart Apache
+
+- name: Copy index.html to web root
+  copy:
+    src: index.html
+    dest: "{{ document_root }}/index.html"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Ensure Apache is running
+  service:
+    name: apache2
+    state: started
+    enabled: true

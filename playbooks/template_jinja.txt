@@ -1,0 +1,35 @@
+# Apache Configuration Template
+templates/config.j2
+ServerName {{ server_name }}
+Listen {{ listen_port }}
+
+<VirtualHost *:{{ listen_port }}>
+    DocumentRoot "{{ document_root }}"
+    ServerAdmin {{ admin_email }}
+    
+    <Directory "{{ document_root }}">
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/{{ server_name }}_error.log
+    CustomLog ${APACHE_LOG_DIR}/{{ server_name }}_access.log combined
+</VirtualHost>
+
+
+vars.yml or group_vars/all.yml
+server_name: www.example.com
+listen_port: 80
+document_root: /var/www/html
+admin_email: admin@example.com
+
+
+#######################################
+
+- name: Deploy Apache configuration
+  template:
+    src: templates/config.j2
+    dest: /etc/apache2/sites-available/000-default.conf
+  notify: restart apache
+
+#######################################

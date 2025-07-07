@@ -1,9 +1,29 @@
+# on controller
+#sudo mkdir -p /data
+#sudo touch /data/test.txt
+
 - name: Step 13 - Sync Files
   hosts: all
   become: true
   tasks:
+    - name: Ensure rsync is installed
+      apt:
+        name: rsync
+        state: present
+        update_cache: yes
+
+    - name: Ensure /opt/data exists
+      file:
+        path: /opt/data
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
     - name: Sync /data from control to remote
       synchronize:
         src: /data/
         dest: /opt/data/
         delete: yes
+      delegate_to: "{{ inventory_hostname }}"
+      become: true

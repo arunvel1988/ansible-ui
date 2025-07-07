@@ -4,6 +4,6 @@
   tasks:
     - name: Fetch script
       get_url:
-        url: https://raw.githubusercontent.com/myorg/setup.sh
+        url: https://raw.githubusercontent.com/arunvel1988/mlkc/refs/heads/main/nginx-setup.sh
         dest: /tmp/setup.sh
         mode: '0755'

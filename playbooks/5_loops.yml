@@ -1,6 +1,6 @@
 ---
 - name: Install Required Packages
-  hosts: web
+  hosts: all
   become: yes
   tasks:
     - name: Install packages
