@@ -1,0 +1,12 @@
+- name: Create users with masked passwords
+  hosts: all
+  become: yes
+  tasks:
+    - name: Generate user creation script
+      template:
+        src: users.sh.j2
+        dest: /tmp/users.sh
+        mode: 0755
+
+    - name: Run user script
+      command: /tmp/users.sh
