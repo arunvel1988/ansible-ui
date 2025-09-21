@@ -1,0 +1,87 @@
+
+
+ansible-galaxy init nginx_deploy
+
+tasks
+main.yml
+---
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+  become: yes
+
+- name: Ensure Nginx is running
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Deploy default index.html
+  copy:
+    src: files/index.html
+    dest: /var/www/html/index.html
+  notify: Restart Nginx
+
+
+
+  handlers
+
+  main.yml
+  ---
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted
+
+
+
+
+
+defaults
+main.yml
+
+---
+# Default variables for the role
+nginx_port: 80
+
+
+meta
+main.yml
+
+---
+galaxy_info:
+  author: Your Name
+  description: "Role to install and configure Nginx" 
+  min_ansible_version: 2.9
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+  galaxy_tags:
+    - web
+    - nginx
+
+
+    tests
+
+    demo.yml
+
+
+    ansible-playbook -i tests/inventory tests/demo.yml
+
+
+    #############################################################################
+    ############################################################################
+ansible-galaxy login   # Login to Ansible Galaxy account
+ansible-galaxy collection build
+
+git init
+git add .
+git commit -m "Initial Nginx role"
+git remote add origin https://github.com/arunvel1988/nginx_deploy.git
+git push -u origin main
+
+
+
