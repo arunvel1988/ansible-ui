@@ -1,0 +1,25 @@
+# Web Server Configuration for {{ env | upper }}
+
+[web_servers]
+{% for host in web_servers %}
+{{ host | env_prefix(env) }}:{{ ports.http }}
+{% endfor %}
+
+[app_servers]
+{% for host in app_servers %}
+{{ host | env_prefix(env) }}:{{ ports.app }}
+{% endfor %}
+
+[database_servers]
+{% for host in db_servers %}
+{{ host | env_prefix(env) }}:3306
+{% endfor %}
+
+# Conditional configuration
+{% if env == "production" %}
+logging_level = ERROR
+ssl_enabled = yes
+{% else %}
+logging_level = DEBUG
+ssl_enabled = no
+{% endif %}
