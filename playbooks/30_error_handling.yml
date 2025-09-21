@@ -1,0 +1,59 @@
+---
+- name: Advanced Configuration and Error Handling Demo
+  hosts: all
+  become: yes
+  vars:
+    packages_to_install:
+      - nginx
+      - git
+      - invalidpackage   # Intentional error to demonstrate error handling
+    service_name: nginx
+    create_file: true
+
+  tasks:
+
+
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ packages_to_install }}"
+      register: install_results
+      ignore_errors: yes   # Continue playbook even if one package fails
+
+    - name: Show installation results
+      debug:
+        var: install_results
+
+    # Task 2: Conditional task execution
+    - name: Create a configuration file only if create_file is true
+      file:
+        path: /tmp/demo_config.conf
+        state: touch
+      when: create_file
+
+    # Task 3: Handle service restart with error checking
+    - name: Restart nginx service
+      service:
+        name: "{{ service_name }}"
+        state: restarted
+      failed_when: "'unrecognized service' in ansible_facts['pkg_mgr_output'] | default('')"
+      ignore_errors: yes
+
+    # Task 4: Block with rescue for complex error handling
+    - name: Block for deploying application
+      block:
+        - name: Copy application files
+          copy:
+            src: files/app/
+            dest: /var/www/html/
+        - name: Ensure permissions
+          file:
+            path: /var/www/html/
+            owner: www-data
+            group: www-data
+            state: directory
+      rescue:
+        - name: Handle deployment failure
+          debug:
+            msg: "Deployment failed! Check source files and permissions."
