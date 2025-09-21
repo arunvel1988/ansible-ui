@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Audit multiple websites
+      website_audit:
+        urls:
+          - "https://example.com"
+          - "https://httpbin.org"
+          - "https://google.com"
+        keyword: "Example"
+        output_file: "/tmp/website_report.csv"
+        output_format: "csv"
+      register: audit_results
+
+    - debug:
+        var: audit_results
