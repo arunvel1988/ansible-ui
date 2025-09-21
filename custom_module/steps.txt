@@ -1,3 +1,6 @@
 ansible-playbook -i localhost, playbook.yml
 
 ansible-playbook -i localhost, site.yml
+
+ansible-playbook -i localhost, website.yml
+
