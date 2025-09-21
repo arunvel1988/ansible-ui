@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Check if example.com is up and contains "Example Domain"
+      website_check:
+        url: "https://example.com"
+        keyword: "Example Domain"
+      register: result
+
+    - debug:
+        var: result
