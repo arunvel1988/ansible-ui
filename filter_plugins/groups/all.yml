@@ -1,0 +1,5 @@
+users:
+  - username: alice
+    password: Secret123
+  - username: bob
+    password: MyPass456
