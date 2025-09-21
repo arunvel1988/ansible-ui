@@ -1,0 +1,8 @@
+- name: Generate dynamic web server config
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Generate config file
+      template:
+        src: templates/webserver.conf.j2
+        dest: "/tmp/webserver_{{ env }}.conf"
