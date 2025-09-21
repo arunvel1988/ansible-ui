@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Test my custom hello module
+      hello:
+        name: "Arunvel"
+      register: result
+
+    - debug:
+        var: result
