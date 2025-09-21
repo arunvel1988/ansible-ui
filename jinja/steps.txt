@@ -99,5 +99,40 @@ echo "{{ user.username }} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 #########################################################################
 
+all:
+  children:
+    webservers:
+      hosts:
+        web1:
+          ansible_host: 10.0.0.11
+          app_port: 8080
+        web2:
+          ansible_host: 10.0.0.12
+          app_port: 8080
+        web3:
+          ansible_host: 10.0.0.13
+          app_port: 9090
+
+
+
+
+upstream backend {
+{% for host in groups['webservers'] %}
+    server {{ hostvars[host].ansible_host }}:{{ hostvars[host].app_port }};
+{% endfor %}
+}
+#####################################################################################
+
+upstream backend {
+    server 10.0.0.11:8080;
+    server 10.0.0.12:8080;
+    server 10.0.0.13:9090;
+}
+
+
+
+#########################################################################################
+
+
 
 
