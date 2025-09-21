@@ -1,0 +1,103 @@
+index.html.j2
+<html>
+  <body>
+    <h1>Hello {{ ansible_hostname }}</h1>
+  </body>
+</html>
+
+
+
+#################################################
+nginx.conf.j2
+upstream backend {
+{% for host in groups['webservers'] %}
+  server {{ hostvars[host].ansible_host }}:8080;
+{% endfor %}
+}
+
+############################################################
+
+iptables.rules.j2
+{% if allow_ssh %}
+-A INPUT -p tcp --dport 22 -j ACCEPT
+{% endif %}
+######################################################
+
+webservers:
+  - name: web1
+    ip: 10.0.0.11
+    port: 8080
+  - name: web2
+    ip: 10.0.0.12
+    port: 8080
+  - name: web3
+    ip: 10.0.0.13
+    port: 9090
+
+firewall_rules:
+  allow_ssh: true
+  allow_http: true
+  allow_https: false
+
+users:
+  - username: alice
+    shell: /bin/zsh
+    sudo: true
+  - username: bob
+    shell: /bin/bash
+    sudo: false
+
+
+##################################################################
+
+nginx.conf.j2
+worker_processes auto;
+events {
+    worker_connections 1024;
+}
+
+http {
+    upstream backend {
+    {% for server in webservers %}
+        server {{ server.ip }}:{{ server.port }};
+    {% endfor %}
+    }
+
+    server {
+        listen 80;
+        server_name {{ inventory_hostname }};
+
+        location / {
+            proxy_pass http://backend;
+        }
+    }
+}
+
+###############################################################################
+
+users.sh.j2
+
+#!/bin/bash
+# Generated user creation script
+
+{% for user in users %}
+useradd -m {{ user.username }} -s {{ user.shell | default('/bin/bash') }}
+{% if user.sudo %}
+echo "{{ user.username }} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+{% endif %}
+{% endfor %}
+##############################################################################
+
+{% for user in users | sort(attribute='username') %}
+# Create user
+useradd {{ user.username }} -s {{ user.shell | default('/bin/bash') }}
+{% if user.sudo %}
+echo "{{ user.username }} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+{% endif %}
+{% endfor %}
+
+
+#########################################################################
+
+
+
