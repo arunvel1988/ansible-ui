@@ -1,0 +1,57 @@
+[node_servers]
+192.168.1.10
+192.168.1.11
+192.168.1.12
+
+
+[webservers]
+web1 ansible_host=192.168.1.21
+web2 ansible_host=192.168.1.22
+
+
+[dbservers]
+db1 ansible_host=192.168.1.31 ansible_user=ubuntu ansible_port=22
+db2 ansible_host=192.168.1.32 ansible_user=ubuntu ansible_port=22
+
+
+[app_servers]
+app1 ansible_host=10.0.0.11
+app2 ansible_host=10.0.0.12
+
+[app_servers:vars]
+ansible_user=ubuntu
+ansible_python_interpreter=/usr/bin/python3
+
+
+[frontend]
+fe1 ansible_host=10.0.1.11
+fe2 ansible_host=10.0.1.12
+
+[backend]
+be1 ansible_host=10.0.2.11
+be2 ansible_host=10.0.2.12
+
+[production:children]
+frontend
+backend
+
+
+#################################################################################
+
+all:
+  children:
+    webservers:
+      hosts:
+        web1:
+          ansible_host: 192.168.1.21
+          ansible_user: ubuntu
+        web2:
+          ansible_host: 192.168.1.22
+          ansible_user: ubuntu
+    dbservers:
+      hosts:
+        db1:
+          ansible_host: 192.168.1.31
+          ansible_user: postgres
+
+#####################################################
