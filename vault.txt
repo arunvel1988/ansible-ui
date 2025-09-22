@@ -17,9 +17,9 @@ my_secret: "superpassword"
       debug:
         msg: "The secret is {{ my_secret }}"
 
-ansible-playbook -i inventory.ini vault_demo.yml --ask-vault-pass
+ansible-playbook -i inventory.ini site.yml --ask-vault-pass
 
 echo "mypassword" > ~/.vault_pass.txt
 chmod 600 ~/.vault_pass.txt
 
-ansible-playbook -i inventory.ini vault_demo.yml --vault-password-file ~/.vault_pass.txt
+ansible-playbook -i inventory.ini site.yml --vault-password-file ~/.vault_pass.txt
