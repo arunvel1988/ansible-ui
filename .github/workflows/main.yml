@@ -1,0 +1,33 @@
+name: Deploy to Killer Koda
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+  
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+   
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          python -m pip install --upgrade pip
+          pip install ansible
+
+    
+      - name: Prepare SSH Key
+        run: |
+          echo "${{ secrets.SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+
+     
+      - name: Run Playbook
+        run: ansible-playbook -i inventory.ini playbook.yml
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
