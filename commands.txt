@@ -18,4 +18,37 @@ ansible all -m setup
 ansible-playbook site.yml -v   
 ansible-playbook site.yml -vvv 
 
+ansible-galaxy init myrole
+
+
+ansible-playbook site.yml 
+
+ansible-playbook site.yml                       
+ansible-playbook -i inventory.ini site.yml       
+ansible-playbook site.yml --check               
+ansible-playbook site.yml --diff                
+ansible-playbook site.yml --start-at-task "Task Name"   
+ansible-playbook site.yml --step             
+ansible-playbook site.yml --limit web1          
+ansible-playbook site.yml --tags "install"      
+ansible-playbook site.yml --skip-tags "debug"   
+
+
+ansible-galaxy init myrole                      
+ansible-galaxy list                             
+ansible-galaxy install geerlingguy.nginx        
+ansible-vault create secrets.yml              
+ansible-vault view secrets.yml                  
+ansible-vault edit secrets.yml                  
+ansible-vault encrypt file.yml                  
+ansible-vault decrypt file.yml                  
+ansible-playbook site.yml --ask-vault-pass      
+ansible-playbook site.yml --vault-password-file ~/.vault_pass.txt
+
+ansible-config list                 
+ansible-config view                 
+ansible-config dump --only-changed    
+
+
+
 
