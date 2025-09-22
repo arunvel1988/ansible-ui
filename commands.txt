@@ -1,2 +1,21 @@
 ansible-config init --disabled > ansible.cfg
 
+ansible --version               
+ansible all -m ping             
+ansible all -a "uptime"         
+ansible all -i inventory.ini -m ping  
+ansible all -m ping -u ubuntu  
+ansible all -m apt -a "name=nginx state=present" --become  
+
+ansible-playbook site.yml                         
+ansible-playbook -i inventory.ini site.yml       
+ansible-playbook site.yml --check                 
+ansible-playbook site.yml --limit web1           
+ansible-playbook site.yml --tags "install,config" 
+ansible-playbook site.yml --skip-tags "debug"    
+
+ansible all -m setup            
+ansible-playbook site.yml -v   
+ansible-playbook site.yml -vvv 
+
+
