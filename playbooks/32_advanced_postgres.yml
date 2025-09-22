@@ -1,0 +1,120 @@
+---
+- name: Install and Configure PostgreSQL
+  hosts: postgres_servers  # Define the group or host for your servers
+  become: yes  # Use sudo for privileged tasks
+  vars:
+    postgresql_version: 12
+    db_name: mydb
+    db_user: myuser
+    db_password: mypassword
+    # Adjust the PostgreSQL version as needed (12 is used here)
+  
+  tasks:
+    # 1. Install PostgreSQL
+    - name: Install PostgreSQL (Ubuntu/Debian)
+      apt:
+        name: "postgresql-{{ postgresql_version }}"
+        state: present
+        update_cache: yes
+      when: ansible_facts['distribution'] in ['Ubuntu', 'Debian']
+
+    - name: Install PostgreSQL (CentOS/RHEL)
+      yum:
+        name: "postgresql-server"
+        state: present
+      when: ansible_facts['distribution'] in ['CentOS', 'RedHat', 'Fedora']
+
+    # 2. Install PostgreSQL client (for remote DB access)
+    - name: Install PostgreSQL client (Ubuntu/Debian)
+      apt:
+        name: postgresql-client
+        state: present
+      when: ansible_facts['distribution'] in ['Ubuntu', 'Debian']
+
+    - name: Install PostgreSQL client (CentOS/RHEL)
+      yum:
+        name: postgresql
+        state: present
+      when: ansible_facts['distribution'] in ['CentOS', 'RedHat', 'Fedora']
+
+    # 3. Open port 5432 in firewall (using firewalld)
+    - name: Open port 5432 in firewalld (Ubuntu/Debian)
+      firewalld:
+        service: postgresql
+        permanent: yes
+        state: enabled
+      when: ansible_facts['distribution'] in ['Ubuntu', 'Debian']
+
+    - name: Open port 5432 in firewalld (CentOS/RHEL)
+      firewalld:
+        port: 5432/tcp
+        permanent: yes
+        state: enabled
+      when: ansible_facts['distribution'] in ['CentOS', 'RedHat', 'Fedora']
+
+    # 4. Ensure PostgreSQL service is started and enabled
+    - name: Ensure PostgreSQL service is started
+      service:
+        name: postgresql
+        state: started
+        enabled: yes
+
+    # 5. Allow remote connections by configuring postgresql.conf
+    - name: Update postgresql.conf to listen on all IPs
+      lineinfile:
+        path: "/etc/postgresql/{{ postgresql_version }}/main/postgresql.conf"
+        regexp: '^#listen_addresses ='
+        line: "listen_addresses = '*'"
+        state: present
+      when: ansible_facts['distribution'] in ['Ubuntu', 'Debian']
+
+    - name: Update postgresql.conf to listen on all IPs (CentOS/RHEL)
+      lineinfile:
+        path: "/var/lib/pgsql/{{ postgresql_version }}/data/postgresql.conf"
+        regexp: '^#listen_addresses ='
+        line: "listen_addresses = '*'"
+        state: present
+      when: ansible_facts['distribution'] in ['CentOS', 'RedHat', 'Fedora']
+
+    # 6. Allow remote connections by modifying pg_hba.conf
+    - name: Modify pg_hba.conf to allow remote access
+      lineinfile:
+        path: "/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf"
+        line: "host    all             all             0.0.0.0/0            md5"
+        state: present
+      when: ansible_facts['distribution'] in ['Ubuntu', 'Debian']
+
+    - name: Modify pg_hba.conf to allow remote access (CentOS/RHEL)
+      lineinfile:
+        path: "/var/lib/pgsql/{{ postgresql_version }}/data/pg_hba.conf"
+        line: "host    all             all             0.0.0.0/0            md5"
+        state: present
+      when: ansible_facts['distribution'] in ['CentOS', 'RedHat', 'Fedora']
+
+    # 7. Restart PostgreSQL service to apply configuration changes
+    - name: Restart PostgreSQL to apply changes
+      service:
+        name: postgresql
+        state: restarted
+
+    # 8. Create PostgreSQL database and user
+    - name: Create PostgreSQL database
+      postgresql_db:
+        name: "{{ db_name }}"
+        state: present
+
+    - name: Create PostgreSQL user
+      postgresql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        db: "{{ db_name }}"
+        priv: "ALL"
+        state: present
+
+    - name: Grant privileges to the user
+      postgresql_user:
+        name: "{{ db_user }}"
+        db: "{{ db_name }}"
+        priv: "ALL"
+        state: present
+        login_host: "{{ ansible_host }}"
