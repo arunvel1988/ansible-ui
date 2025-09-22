@@ -1,14 +1,13 @@
 ---
 - name: Install and Configure PostgreSQL
-  hosts: postgres_servers  # Define the group or host for your servers
-  become: yes  # Use sudo for privileged tasks
+  hosts: postgres_servers
+  become: yes 
   vars:
     postgresql_version: 12
     db_name: mydb
     db_user: myuser
     db_password: mypassword
-    # Adjust the PostgreSQL version as needed (12 is used here)
-  
+    
   tasks:
     # 1. Install PostgreSQL
     - name: Install PostgreSQL (Ubuntu/Debian)
