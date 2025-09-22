@@ -1,0 +1,25 @@
+inventory.ini
+[local]
+localhost ansible_connection=local
+
+
+ansible-vault create secrets.yml
+
+
+my_secret: "superpassword"
+
+
+- hosts: local
+  vars_files:
+    - secrets.yml
+  tasks:
+    - name: Print the secret
+      debug:
+        msg: "The secret is {{ my_secret }}"
+
+ansible-playbook -i inventory.ini vault_demo.yml --ask-vault-pass
+
+echo "mypassword" > ~/.vault_pass.txt
+chmod 600 ~/.vault_pass.txt
+
+ansible-playbook -i inventory.ini vault_demo.yml --vault-password-file ~/.vault_pass.txt
