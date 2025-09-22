@@ -28,6 +28,7 @@ jobs:
 
      
       - name: Run Playbook
-        run: ansible-playbook -i killer-inventory.ini test_playbook.yml
+        #run: ansible-playbook -i killer-inventory.ini test_playbook.yml
+        run: ansible-playbook -i killer-inventory.ini playbooks/1_install_apache.yml
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
