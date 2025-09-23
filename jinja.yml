@@ -1,0 +1,10 @@
+- hosts: all
+  vars:
+    app_name: "MyApp"
+    app_version: "1.0.0"
+    environment: "dev"
+  tasks:
+    - name: Render index.html from template
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
