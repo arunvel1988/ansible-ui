@@ -8,6 +8,9 @@ winrm quickconfig
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
 
+# Replace with your desired username and password
+net user ansibleuser P@ssw0rd! /add
+
 net localgroup Administrators ansibleuser /add
 
 [windows]
