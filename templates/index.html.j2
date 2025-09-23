@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>{{ app_name }} - Version {{ app_version }}</title>
+  </head>
+  <body>
+    <h1>Welcome to {{ app_name }}!</h1>
+    <p>Deployed on {{ ansible_date_time.date }} at {{ ansible_date_time.time }}.</p>
+
+    {% if environment == "prod" %}
+    <p style="color:red;">Production environment — be careful!</p>
+    {% else %}
+    <p>Environment: {{ environment }}</p>
+    {% endif %}
+  </body>
+</html>
