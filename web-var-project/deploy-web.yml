@@ -1,0 +1,83 @@
+---
+- name: Deploy Web Servers
+  hosts: webservers
+  become: yes
+  
+  tasks:
+    # This task shows variables from all.yml (group_vars)
+    - name: Set timezone
+      timezone:
+        name: "{{ timezone }}"
+      
+    # This task shows variables from webservers.yml (group_vars)
+    - name: Install web packages
+      apt:
+        name: "{{ web_packages }}"
+        state: present
+        update_cache: yes
+    
+    # This task shows host-specific variables (host_vars)
+    - name: Create custom index page
+      copy:
+        content: |
+          <html>
+          <head><title>{{ site_name }}</title></head>
+          <body>
+            <h1>{{ site_message }}</h1>
+            <p>Server ID: {{ server_id }}</p>
+            <p>Running on port {{ web_port }}</p>
+            <p>Memory: {{ memory_limit }}</p>
+            <p>Admin: {{ admin_user }}</p>
+          </body>
+          </html>
+        dest: "{{ web_root }}/index.html"
+        owner: "{{ web_user }}"
+        group: "{{ web_user }}"
+    
+    # This task shows conditional logic based on host vars
+    - name: Setup monitoring (only if enabled)
+      service:
+        name: monitoring-agent
+        state: started
+      when: enable_monitoring is defined and enable_monitoring
+    
+    # This task shows how variables combine
+    - name: Configure nginx
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-available/default
+      vars:
+        # These variables come from different sources:
+        # - site_name: group_vars/webservers.yml
+        # - web_port: host_vars (overrides group_vars/all.yml)
+        # - ssl_port: group_vars/webservers.yml
+        server_config:
+          name: "{{ site_name }}"
+          port: "{{ web_port }}"
+          ssl_port: "{{ ssl_port if ssl_enabled else 'disabled' }}"
+      notify: restart nginx
+    
+    # Show debug information to understand variable sources
+    - name: Debug - Show where variables come from
+      debug:
+        msg: |
+          Server: {{ inventory_hostname }}
+          
+          From all.yml (applies to all hosts):
+          - timezone: {{ timezone }}
+          - admin_user: {{ admin_user }}
+          
+          From webservers.yml (applies to webserver group):
+          - web_service: {{ web_service }}
+          - site_name: {{ site_name }}
+          
+          From host_vars (specific to this host):
+          - server_id: {{ server_id }}
+          - web_port: {{ web_port }} (overrides default)
+          - site_message: {{ site_message }}
+  
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted
