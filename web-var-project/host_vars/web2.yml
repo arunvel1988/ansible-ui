@@ -1,0 +1,13 @@
+---
+# Unique settings for web2
+server_id: "web02-production"
+web_port: 8081  # Different port than web1
+memory_limit: "4GB"
+
+# Custom site content for web2
+site_message: "Welcome to Web Server 2!"
+backup_schedule: "0 3 * * *"  # 3 AM daily
+
+# Web2 specific features
+enable_monitoring: false
+enable_caching: true
