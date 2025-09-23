@@ -1,0 +1,11 @@
+- hosts: webservers
+  tasks:
+    - name: Show HTTP port
+      debug:
+        var: http_port
+
+- hosts: dbservers
+  tasks:
+    - name: Show DB port
+      debug:
+        var: db_port
