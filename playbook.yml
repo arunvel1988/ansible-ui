@@ -1,0 +1,8 @@
+- name: Test custom filter plugin
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Show masked password
+      debug:
+        msg: "Masked password is {{ my_password | mask_password }}"
