@@ -1,0 +1,15 @@
+---
+# Web server specific settings
+web_service: "nginx"
+web_root: "/var/www/html"
+ssl_enabled: true
+ssl_port: 443
+
+# Packages needed for web servers
+web_packages:
+  - nginx
+  - ufw
+  - certbot
+
+# Site configuration
+site_name: "My Company Website"
