@@ -1,0 +1,36 @@
+sudo apt update
+sudo apt install -y python3-pip
+pip3 install "pywinrm>=0.4.2"
+
+
+winrm quickconfig
+
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+winrm set winrm/config/service/auth '@{Basic="true"}'
+
+net localgroup Administrators ansibleuser /add
+
+[windows]
+win2019 ansible_host=192.168.1.100
+
+[windows:vars]
+ansible_user=ansibleuser
+ansible_password=YourPasswordHere
+ansible_connection=winrm
+ansible_winrm_transport=basic
+ansible_winrm_server_cert_validation=ignore
+ansible -i inventory.ini windows -m win_ping
+---
+- name: Test Windows Server
+  hosts: windows
+  tasks:
+    - name: Ping Windows host
+      ansible.windows.win_ping:
+
+    - name: Create a folder
+      ansible.windows.win_file:
+        path: C:\temp\ansible_test
+        state: directory
+
+    - name: Run a command
+      ansible.windows.win_command: hostname
