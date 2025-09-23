@@ -1,0 +1,12 @@
+---
+# Unique settings for web1
+server_id: "web01-production"
+web_port: 8080  # Override default port
+memory_limit: "2GB"
+
+# Custom site content for web1
+site_message: "Welcome to Web Server 1!"
+backup_schedule: "0 2 * * *"  # 2 AM daily
+
+# Web1 specific features
+enable_monitoring: true
