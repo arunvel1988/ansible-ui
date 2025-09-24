@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Automation Response Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f4f6f8; }
+        header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+        main { display: flex; flex-wrap: wrap; justify-content: center; margin: 20px; }
+        .card { background: white; padding: 20px; margin: 15px; border-radius: 12px; 
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 250px; text-align: center; 
+                transition: transform 0.2s; }
+        .card:hover { transform: scale(1.05); }
+        button { background: #3498db; color: white; border: none; padding: 12px 20px; 
+                 margin-top: 15px; border-radius: 6px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #2980b9; }
+        .status { font-size: 18px; margin-top: 10px; padding: 8px; border-radius: 6px; }
+        .cpu-ok { background: #2ecc71; color: white; }
+        .cpu-high { background: #e74c3c; color: white; }
+        .flash { background: #f1c40f; padding: 10px; margin: 10px auto; width: 90%; 
+                 text-align: center; border-radius: 6px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Automation Response Dashboard</h1>
+    </header>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="flash">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <main>
+        <div class="card">
+            <h2>CPU Status</h2>
+            <div class="status {{ 'cpu-high' if cpu_status > 50 else 'cpu-ok' }}">
+                {{ cpu_status }}%
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Manual Actions</h2>
+            <button onclick="window.location.href='/run-playbook'">Run Playbook</button>
+            <button onclick="window.location.href='/simulate-high-cpu'">Simulate High CPU</button>
+            <button onclick="window.location.href='/kill-stress'">Kill Stress Process</button>
+        </div>
+    </main>
+</body>
+</html>
