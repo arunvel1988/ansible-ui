@@ -1,3 +1,6 @@
+
+#######################################################################################
+###
 pip install ansible ansible-rulebook ansible-eda
 
 apache.yml
@@ -219,3 +222,31 @@ scale_out.yml
 
 #####################################################
 ansible-rulebook -r prometheus_rulebook.yml -i inventory.ini
+
+####################################
+pip install ansible ansible-runner
+
+
+- name: Print hello when triggered
+  hosts: localhost
+  tasks:
+    - name: Say Hello
+      debug:
+        msg: "Hello! Event triggered this playbook"
+
+import ansible_runner
+import time
+
+print("Waiting for an event... (press Enter to trigger playbook)")
+
+while True:
+    input("Press Enter to trigger playbook: ")
+    r = ansible_runner.run(private_data_dir='.', playbook='hello.yml')
+    print(f"Playbook finished with status: {r.status}, rc: {r.rc}")
+
+##########################################################################
+
+
+
+
+
