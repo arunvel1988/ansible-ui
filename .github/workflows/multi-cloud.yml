@@ -1,0 +1,38 @@
+name: Deploy Multi-Env Multi-Cloud
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Choose environment"
+        required: true
+        default: "dev"
+        type: choice
+        options: [dev, staging, prod]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cloud: [aws, gcp, azure]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Ansible
+        run: |
+          sudo apt update
+          python -m pip install --upgrade pip
+          pip install ansible ansible-lint
+
+      - name: Lint Playbooks
+        run: ansible-lint playbooks/
+
+      - name: Deploy to ${{ github.event.inputs.environment }} on ${{ matrix.cloud }}
+        run: ansible-playbook \
+          -i inventories/${{ github.event.inputs.environment }}/${{ matrix.cloud }}.yml \
+          playbooks/site.yml
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
