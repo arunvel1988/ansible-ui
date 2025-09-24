@@ -61,3 +61,5 @@ fi
 # Run Python app
 echo "🚀 Running ansible-ui.py..."
 python3 ansible-ui.py
+# python3 -m venv myenv
+#source myenv/bin/activate
