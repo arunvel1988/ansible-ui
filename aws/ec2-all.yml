@@ -1,0 +1,13 @@
+plugin: amazon.aws.ec2
+regions:
+  - ap-south-1
+filters:
+  instance-state-name: running
+hostnames:
+  - tag: Name
+compose:
+  ansible_host: public_ip_address
+groups: []
+cache: yes
+cache_plugin: jsonfile
+cache_timeout: 300
