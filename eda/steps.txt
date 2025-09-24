@@ -158,3 +158,63 @@ ansible-rulebook -r apache_rulebook.yml -i inventory.ini
 
 python3 app.py
 
+###############################################################################################################
+alerts.yml
+
+groups:
+- name: node_alerts
+  rules:
+  - alert: HighCPUUsage
+    expr: 100 - (avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 80
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: "High CPU usage detected on {{ $labels.instance }}"
+      description: "CPU usage is above 80% for more than 2 minutes"
+
+#####################################################################################################
+
+alertmanager.yml
+route:
+  receiver: ansible-eda
+
+receivers:
+- name: ansible-eda
+  webhook_configs:
+    - url: "http://<ansible-controller-ip>:5000/alerts"
+
+
+#############################################################################################
+
+prometheus_rulebook.yml
+- name: Prometheus Alerts Rulebook
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+        endpoint: /alerts
+
+  rules:
+    - name: Handle High CPU Usage
+      condition: event.alert.labels.alertname == "HighCPUUsage"
+      action:
+        run_playbook:
+          name: scale_out.yml
+
+#####################################################
+scale_out.yml
+- hosts: localhost
+  tasks:
+    - name: Scale out an instance in GCP
+      community.general.gcp_compute_instance:
+        name: "extra-node"
+        machine_type: "e2-medium"
+        zone: "asia-south1-b"
+        project: "arun-1988"
+        auth_kind: serviceaccount
+        service_account_file: "./service-account.json"
+        state: present
+
+#####################################################
