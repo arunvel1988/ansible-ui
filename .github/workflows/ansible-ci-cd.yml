@@ -1,0 +1,53 @@
+name: Deploy to Killer Koda
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Install yamllint
+        run: pip install yamllint
+        
+      - name: Run yamllint
+        run: yamllint .
+   
+      - name: Install Ansible & ansible-lint
+        run: |
+          sudo apt update
+          python -m pip install --upgrade pip
+          pip install ansible ansible-lint
+
+      - name: Run ansible-lint
+        run: ansible-lint playbooks/ 
+
+ 
+      - name: Run TruffleHog (secrets scan)
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: .
+          entropy: true
+
+    
+      - name: Install Bandit
+        run: pip install bandit
+
+      - name: Run Bandit (Python security scan)
+        run: bandit -r .
+
+ 
+      - name: Prepare SSH Key
+        run: |
+          echo "${{ secrets.SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+
+      - name: Run Playbook
+        run: ansible-playbook -i killer-inventory.ini playbooks/1_install_apache.yml
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
