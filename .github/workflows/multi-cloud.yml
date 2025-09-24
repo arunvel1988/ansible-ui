@@ -18,9 +18,11 @@ jobs:
         cloud: [aws, gcp, azure]
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
 
+ 
       - name: Install Ansible
         run: |
           sudo apt update
@@ -29,6 +31,34 @@ jobs:
 
       - name: Lint Playbooks
         run: ansible-lint playbooks/
+
+      - name: Prepare GCP Credentials
+        if: matrix.cloud == 'gcp'
+        run: |
+          echo "${{ secrets.GCP_SERVICE_ACCOUNT }}" > gcp-service-account.json
+          echo "${{ secrets.SSH_KEY_DEV_GCP }}" > ~/.ssh/dev_gcp_key
+          chmod 600 ~/.ssh/dev_gcp_key
+
+      - name: Prepare AWS Credentials
+        if: matrix.cloud == 'aws'
+        run: |
+          mkdir -p ~/.aws
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo "${{ secrets.SSH_KEY_STAGING_AWS }}" > ~/.ssh/staging_aws_key.pem
+          chmod 600 ~/.ssh/staging_aws_key.pem
+
+      - name: Prepare Azure Credentials
+        if: matrix.cloud == 'azure'
+        run: |
+          echo "${{ secrets.SSH_KEY_PROD_AZURE }}" > ~/.ssh/prod_azure_key
+          chmod 600 ~/.ssh/prod_azure_key
+          echo "export AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "export AZURE_SECRET=${{ secrets.AZURE_SECRET }}" >> $GITHUB_ENV
+          echo "export AZURE_TENANT=${{ secrets.AZURE_TENANT }}" >> $GITHUB_ENV
+          echo "export AZURE_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
+
 
       - name: Deploy to ${{ github.event.inputs.environment }} on ${{ matrix.cloud }}
         run: ansible-playbook \
