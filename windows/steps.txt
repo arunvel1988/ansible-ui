@@ -28,6 +28,8 @@ ansible_password=YourPasswordHere
 ansible_connection=winrm
 ansible_winrm_transport=basic
 ansible_winrm_server_cert_validation=ignore
+ansible_port=5986
+
 ansible -i inventory.ini windows -m win_ping
 ---
 - name: Test Windows Server
