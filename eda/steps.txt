@@ -246,7 +246,41 @@ while True:
 
 ##########################################################################
 
+pip install ansible ansible-runner psutil
 
+- name: CPU Alert Response
+  hosts: localhost
+  tasks:
+    - name: Print CPU alert
+      debug:
+        msg: "High CPU usage detected! Taking action..."
+
+    - name: Kill stress process (if any)
+      ansible.builtin.shell: |
+        pkill -f stress || true
+
+##################################################
+
+import ansible_runner
+import psutil
+import time
+
+CPU_THRESHOLD = 50  # % CPU usage to trigger playbook
+CHECK_INTERVAL = 5  # seconds
+
+print(f"Monitoring CPU... will trigger playbook if usage > {CPU_THRESHOLD}%")
+
+while True:
+    cpu = psutil.cpu_percent(interval=1)
+    print(f"Current CPU usage: {cpu}%")
+
+    if cpu > CPU_THRESHOLD:
+        print("⚡ Event: High CPU detected, running Ansible playbook...")
+        r = ansible_runner.run(private_data_dir='.', playbook='cpu_alert.yml')
+        print(f"Playbook finished with status: {r.status}, rc: {r.rc}")
+
+    time.sleep(CHECK_INTERVAL)
+###################################################################################
 
 
 
