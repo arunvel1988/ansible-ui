@@ -218,3 +218,4 @@ scale_out.yml
         state: present
 
 #####################################################
+ansible-rulebook -r prometheus_rulebook.yml -i inventory.ini
