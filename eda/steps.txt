@@ -1,0 +1,160 @@
+pip install ansible ansible-rulebook ansible-eda
+
+apache.yml
+- name: Restart Apache
+  hosts: webserver
+  become: yes
+  tasks:
+    - name: Restart Apache service
+      service:
+        name: apache2
+        state: restarted
+
+
+apache_rulebook.yml
+- name: Restart Apache when event is fired
+  hosts: localhost
+  sources:
+    - ansible.eda.file:
+        path: /tmp/apache_events.json   # File we will write events to
+  rules:
+    - name: Restart Apache on alert
+      condition: event.message == "apache_down"
+      action:
+        run_playbook:
+          name: restart_apache.yml
+
+
+
+ansible-rulebook -r apache_rulebook.yml -i inventory.ini
+
+echo '{"message": "apache_down"}' >> /tmp/apache_events.json
+
+###################################################################################
+apache_rulebook.yml
+
+- name: Restart Apache via Webhook
+  hosts: localhost
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0     # Listen on all interfaces
+        port: 5000        # Webhook server port
+
+  rules:
+    - name: Restart Apache on event
+      condition: event.payload.action == "restart_apache"
+      action:
+        run_playbook:
+          name: restart_apache.yml
+          
+####################################################################################
+
+ansible-rulebook -r apache_rulebook.yml -i inventory.ini
+
+app.py
+
+from flask import Flask, jsonify, request
+import requests
+
+app = Flask(__name__)
+
+# 👉 Change this to your Ansible EDA webhook endpoint
+EDA_WEBHOOK_URL = "http://127.0.0.1:5000/endpoint"
+
+@app.route("/")
+def home():
+    return """
+    <h2>Ansible EDA Webhook Demo</h2>
+    <button onclick="fetch('/start').then(r => r.json()).then(alert)">Start Apache</button>
+    <button onclick="fetch('/stop').then(r => r.json()).then(alert)">Stop Apache</button>
+    <button onclick="fetch('/restart').then(r => r.json()).then(alert)">Restart Apache</button>
+    """
+
+@app.route("/start", methods=["GET"])
+def start_apache():
+    payload = {"action": "start_apache"}
+    response = requests.post(EDA_WEBHOOK_URL, json=payload)
+    return jsonify({"status": "sent", "ansible_response": response.text})
+
+@app.route("/stop", methods=["GET"])
+def stop_apache():
+    payload = {"action": "stop_apache"}
+    response = requests.post(EDA_WEBHOOK_URL, json=payload)
+    return jsonify({"status": "sent", "ansible_response": response.text})
+
+@app.route("/restart", methods=["GET"])
+def restart_apache():
+    payload = {"action": "restart_apache"}
+    response = requests.post(EDA_WEBHOOK_URL, json=payload)
+    return jsonify({"status": "sent", "ansible_response": response.text})
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000)
+
+
+    #####################################################################################
+apache_rulebook.ym
+- name: Apache Webhook Demo
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5000
+
+  rules:
+    - name: Start Apache
+      condition: event.action == "start_apache"
+      action:
+        run_playbook:
+          name: start_apache.yml
+
+    - name: Stop Apache
+      condition: event.action == "stop_apache"
+      action:
+        run_playbook:
+          name: stop_apache.yml
+
+    - name: Restart Apache
+      condition: event.action == "restart_apache"
+      action:
+        run_playbook:
+          name: restart_apache.yml
+
+          
+
+###########################################################################################
+start_apache.yml
+
+- hosts: all
+  tasks:
+    - name: Start Apache
+      service:
+        name: apache2
+        state: started
+
+################################################################################
+stop_apache.yml
+- hosts: all
+  tasks:
+    - name: Stop Apache
+      service:
+        name: apache2
+        state: stopped
+
+
+##############################################################################
+
+restart_apache.yml
+- hosts: all
+  tasks:
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted
+
+ansible-rulebook -r apache_rulebook.yml -i inventory.ini
+
+
+
+python3 app.py
+
