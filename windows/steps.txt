@@ -7,6 +7,12 @@ winrm quickconfig
 
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
 winrm set winrm/config/service/auth '@{Basic="true"}'
+# For HTTPS (5986)
+New-NetFirewallRule -Name "WinRM_HTTPS" -DisplayName "Allow WinRM HTTPS" -Protocol TCP -LocalPort 5986 -Action Allow
+
+# Or for HTTP (5985) if you want to test first
+New-NetFirewallRule -Name "WinRM_HTTP" -DisplayName "Allow WinRM HTTP" -Protocol TCP -LocalPort 5985 -Action Allow
+
 
 # Replace with your desired username and password
 net user ansibleuser P@ssw0rd! /add
