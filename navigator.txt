@@ -1,0 +1,13 @@
+ansible-navigator run test.yml
+
+ansible-navigator run test.yml -i inventory.ini
+
+ansible-navigator inventory -i inventory/aws_ec2.yml --list
+
+ansible-navigator collections
+
+ansible-navigator doc ansible.builtin.copy
+
+ansible-navigator
+
+ansible-navigator run test.yml -eei  quay.io/ansible/creator-ee
