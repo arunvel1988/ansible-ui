@@ -1,0 +1,34 @@
+pip install molecule[docker] ansible-lint
+
+ansible-galaxy init demo_role
+cd demo_role
+
+molecule init scenario default
+
+
+
+molecule/default/molecule.yml
+
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: python:3.11-slim
+    pre_build_image: true
+
+
+tasks/main.yml
+
+- name: Create a demo directory
+  ansible.builtin.file:
+    path: /tmp/demo_dir
+    state: directory
+    mode: '0755'
+
+- name: Create a demo file
+  ansible.builtin.file:
+    path: /tmp/demo_dir/hello.txt
+    state: touch
+
+
+molecule test -s default
