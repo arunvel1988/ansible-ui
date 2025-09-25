@@ -67,3 +67,13 @@ compose:
   ansible_host: endpoint.address
 groups: []
 ####################################################
+plugin: amazon.aws.ec2
+regions:
+  - eu-north-1   
+filters:
+  instance-state-name: running
+hostnames:
+  - tag: Name      
+compose:
+  ansible_host: public_ip_address  
+groups: []
