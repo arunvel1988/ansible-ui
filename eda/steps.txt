@@ -296,5 +296,8 @@ sudo apt install -y openjdk-17-jre
 ansible-rulebook -r cpu_rulebook.yml -i inventory.yml
 python3 send_alert.py
 ##############################################
+sudo update-alternatives --config java
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
 
 
