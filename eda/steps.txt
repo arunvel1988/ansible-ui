@@ -230,6 +230,7 @@ pip install ansible ansible-runner flask psutil
 pip install ansible-rulebook
 sudo apt update
 sudo apt install -y openjdk-17-jre
+ansible-galaxy collection install ansible.eda
 
 sudo apt update
 sudo apt install stress -y
