@@ -1,0 +1,13 @@
+---
+- name: Respond to high CPU usage
+  hosts: localhost
+  sources:
+    - ansible.eda.alerts:
+        host: localhost
+        port: 5000
+  rules:
+    - name: High CPU alert rule
+      condition: event.cpu > 80
+      action:
+        run_playbook:
+          name: cpu_alert.yml
