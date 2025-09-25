@@ -4,15 +4,15 @@
   gather_facts: no
   tasks:
 
-    - name: Print CPU alert message
+    - name: "Print CPU alert message"
       debug:
         msg: "⚡ High CPU usage detected! Taking action..."
 
-    - name: Kill stress process if running
+    - name: "Kill stress process if running"
       ansible.builtin.shell: |
         pkill -f stress || true
       ignore_errors: yes
 
-    - name: Optional: Add other automated responses
+    - name: "Optional: Add other automated responses"
       debug:
         msg: "You can extend this task to restart services, send alerts, etc."
