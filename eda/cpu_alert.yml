@@ -10,8 +10,10 @@
 
     - name: "Kill stress process if running"
       ansible.builtin.shell: |
-        pkill -f stress || true
-      ignore_errors: yes
+        if pgrep stress; then
+          pkill stress
+        fi
+      failed_when: false
 
     - name: "Optional: Add other automated responses"
       debug:
