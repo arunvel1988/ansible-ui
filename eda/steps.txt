@@ -287,6 +287,8 @@ while True:
 
     time.sleep(CHECK_INTERVAL)
 ###################################################################################
+sudo apt update
+sudo apt install -y openjdk-17-jre
 
 ansible-rulebook -r cpu_rulebook.yml -i localhost
 python3 send_alert.py
