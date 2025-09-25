@@ -45,3 +45,27 @@ ansible -i inventory.ini windows -m win_ping
 
     - name: Run a command
       ansible.windows.win_command: hostname
+
+
+
+
+############################################################
+
+- name: Run command on Linux
+  hosts: linux
+  tasks:
+    - name: Check uptime
+      ansible.builtin.shell: uptime
+      register: result
+    - debug:
+        var: result.stdout
+
+- name: Run command on Windows
+  hosts: windows
+  tasks:
+    - name: Check OS version
+      ansible.windows.win_command: systeminfo
+      register: result
+    - debug:
+        var: result.stdout
+##########################################
