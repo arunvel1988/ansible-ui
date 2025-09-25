@@ -1,13 +1,14 @@
+###########################################################
 pip install molecule[docker] ansible-lint
 pip install molecule-docker
 
-
+###########################################################
 ansible-galaxy init demo_role
 cd demo_role
 
 molecule init scenario default
 
-
+###########################################################
 
 molecule/default/molecule.yml
 
@@ -18,7 +19,7 @@ platforms:
     image: python:3.11-slim
     pre_build_image: true
 
-
+###########################################################
 tasks/main.yml
 
 - name: Create a demo directory
@@ -31,6 +32,32 @@ tasks/main.yml
   ansible.builtin.file:
     path: /tmp/demo_dir/hello.txt
     state: touch
+###########################################################
 
+demo_role/meta/main.yml
+
+galaxy_info:
+  author: arun
+  description: Ansible modules with Molecule
+  company: xyz
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
+        - jammy
+  role_name: demo_role
+  namespace: arunvel
+
+dependencies: []
+###########################################################
 
 molecule test -s default
+
+###########################################################
+
+
+
+
