@@ -1,4 +1,6 @@
 pip install molecule[docker] ansible-lint
+pip install molecule-docker
+
 
 ansible-galaxy init demo_role
 cd demo_role
