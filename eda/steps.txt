@@ -226,7 +226,9 @@ ansible-rulebook -r prometheus_rulebook.yml -i inventory.ini
 ####################################
 python3 -m venv myenv
 source myenv/bin/activate
-pip install ansible ansible-runner
+pip install ansible ansible-runner flask psutil
+sudo apt update
+sudo apt install stress -y
 
 
 - name: Print hello when triggered
