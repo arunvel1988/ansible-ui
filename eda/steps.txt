@@ -224,6 +224,8 @@ scale_out.yml
 ansible-rulebook -r prometheus_rulebook.yml -i inventory.ini
 
 ####################################
+python3 -m venv myenv
+source myenv/bin/activate
 pip install ansible ansible-runner
 
 
