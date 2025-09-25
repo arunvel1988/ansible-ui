@@ -227,6 +227,8 @@ ansible-rulebook -r prometheus_rulebook.yml -i inventory.ini
 python3 -m venv myenv
 source myenv/bin/activate
 pip install ansible ansible-runner flask psutil
+pip install ansible-rulebook
+
 sudo apt update
 sudo apt install stress -y
 
