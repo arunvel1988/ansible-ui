@@ -1,0 +1,33 @@
+#####################################################################################
+
+---
+- name: Respond to high CPU usage
+  hosts: localhost
+  sources:
+    - ansible.eda.timer:
+        interval: 5   # fire every 5 seconds
+  rules:
+    - name: CPU spike detected
+      condition: event.cpu > 80
+      action:
+        run_playbook:
+          name: cpu_alert.yml
+
+
+################################################################
+
+---
+- name: Auto-restart Nginx if it fails
+  hosts: localhost
+  sources:
+    - ansible.eda.timer:
+        interval: 10
+  rules:
+    - name: Check if Nginx is running
+      condition: ansible_facts.services['nginx'].state != 'running'
+      action:
+        run_playbook:
+          name: restart_nginx.yml
+
+
+###########################################################
