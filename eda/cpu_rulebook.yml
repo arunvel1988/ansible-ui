@@ -2,7 +2,7 @@
 - name: Respond to high CPU usage
   hosts: localhost
   sources:
-    - ansible.eda.alerts:
+    - ansible.eda.webhook:
         host: localhost
         port: 5000
   rules:
