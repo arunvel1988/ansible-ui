@@ -222,7 +222,9 @@ scale_out.yml
 
 #####################################################
 ansible-rulebook -r prometheus_rulebook.yml -i inventory.ini
-
+##############################################################################
+##############################################################################
+###############################################################################################
 ####################################
 python3 -m venv myenv
 source myenv/bin/activate
@@ -235,6 +237,21 @@ ansible-galaxy collection install ansible.eda
 sudo apt update
 sudo apt install stress -y
 
+
+sudo apt update
+sudo apt install -y openjdk-17-jre
+
+ansible-rulebook -r cpu_rulebook.yml -i inventory.yml
+python3 send_alert.py
+##############################################
+sudo update-alternatives --config java
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+
+################################################################################
+####################################################################################
+####################################################################################
+##################################################################################
 
 - name: Print hello when triggered
   hosts: localhost
