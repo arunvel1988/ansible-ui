@@ -288,5 +288,8 @@ while True:
     time.sleep(CHECK_INTERVAL)
 ###################################################################################
 
+ansible-rulebook -r cpu_rulebook.yml -i localhost
+python3 send_alert.py
+##############################################
 
 
