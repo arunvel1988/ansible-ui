@@ -292,7 +292,7 @@ while True:
 sudo apt update
 sudo apt install -y openjdk-17-jre
 
-ansible-rulebook -r cpu_rulebook.yml -i localhost
+ansible-rulebook -r cpu_rulebook.yml -i inventory.yml
 python3 send_alert.py
 ##############################################
 
