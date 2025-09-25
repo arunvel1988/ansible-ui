@@ -14,10 +14,22 @@ molecule/default/molecule.yml
 
 driver:
   name: docker
+
 platforms:
   - name: instance
     image: python:3.11-slim
     pre_build_image: true
+    command: sleep infinity
+    user: root   # <-- run as root to avoid permission issues
+
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      remote_tmp: /tmp/.ansible/tmp  
+
+verifier:
+  name: ansible
 
 ###########################################################
 tasks/main.yml
