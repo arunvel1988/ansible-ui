@@ -3,11 +3,11 @@
   hosts: localhost
   sources:
     - ansible.eda.webhook:
-        host: localhost
+        host: 0.0.0.0
         port: 5000
   rules:
     - name: High CPU alert rule
-      condition: event.cpu > 80
+      condition: event.payload.cpu > 80
       action:
         run_playbook:
           name: cpu_alert.yml
