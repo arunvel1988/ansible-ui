@@ -1,4 +1,6 @@
 #####################################################################
+python3 -m venv myenv
+source myenv/bin/activate
 pip install ansible-builder
 
 mkdir project_directory && cd project_directory
