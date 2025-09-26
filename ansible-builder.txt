@@ -1,51 +1,22 @@
 #####################################################################
 pip install ansible-builder
 
+mkdir project_directory && cd project_directory
 
-execution-environment.yml
-
-version: 3
-
+cat <<EOT >> execution-environment.yml
+---
+version: 1
 dependencies:
-  python: requirements.txt
-  system: bindep.txt
   galaxy: requirements.yml
+EOT
 
 
-##################################################################
-requirements.txt
 
-requests
-
-##################################################################
-
-requirements.yml
-
+cat <<EOT >> requirements.yml
+---
 collections:
-  - name: ansible.posix
-  - name: community.general
+  - name: servicenow.itsm
+EOT
 
-##################################################################
-
-bindep.txt
-curl
-git
-
-ansible-builder build -t my-image-ee:1.0
-
-
-##################################################################
-
-ansible-navigator run playbook.yml --execution-environment-image my-ee:1.0
-##############################################
-nano ansible.cfg
-
-[galaxy]
-server_list = galaxy
-
-[galaxy_server.galaxy]
-url=https://galaxy.ansible.com
-
-
-################################################
+ansible-builder build -v3 -t custom-ee
 
