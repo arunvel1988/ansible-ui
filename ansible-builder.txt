@@ -18,5 +18,8 @@ collections:
   - name: servicenow.itsm
 EOT
 
+
+ansible-builder build -v3 -t custom-ee --container-runtime docker
+
 ansible-builder build -v3 -t custom-ee
 
