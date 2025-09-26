@@ -1,4 +1,7 @@
 ###########################################################
+python3 -m venv myenv
+source myenv/bin/activate
+
 pip install molecule[docker] ansible-lint
 pip install molecule-docker
 
