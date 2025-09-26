@@ -3,23 +3,22 @@ pip install ansible-builder
 
 mkdir project_directory && cd project_directory
 
-cat <<EOT >> execution-environment.yml
+execution-environment.yml
 ---
 version: 3
 dependencies:
   galaxy: requirements.yml
-EOT
 
 
 
-cat <<EOT >> requirements.yml
+requirements.yml
 ---
 collections:
   - name: servicenow.itsm
-EOT
+
 
 
 ansible-builder build -v3 -t custom-ee --container-runtime docker
 
-ansible-builder build -v3 -t custom-ee
+
 
