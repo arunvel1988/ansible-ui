@@ -49,7 +49,7 @@ tasks/main.yml
     state: touch
 ###########################################################
 
-/meta/main.yml
+meta/main.yml
 
 galaxy_info:
   author: arun
