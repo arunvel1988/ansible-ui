@@ -37,5 +37,15 @@ ansible-builder build -t my-image-ee:1.0
 ##################################################################
 
 ansible-navigator run playbook.yml --execution-environment-image my-ee:1.0
+##############################################
+nano ansible.cfg
 
+[galaxy]
+server_list = galaxy
+
+[galaxy_server.galaxy]
+url=https://galaxy.ansible.com
+
+
+################################################
 
