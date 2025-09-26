@@ -5,7 +5,7 @@ mkdir project_directory && cd project_directory
 
 cat <<EOT >> execution-environment.yml
 ---
-version: 1
+version: 3
 dependencies:
   galaxy: requirements.yml
 EOT
