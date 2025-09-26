@@ -1,0 +1,38 @@
+#####################################################################
+
+execution-environment.yml
+
+version: 3
+
+dependencies:
+  python: requirements.txt
+  system: bindep.txt
+  galaxy: requirements.yml
+
+
+##################################################################
+requirements.yml
+
+requests
+
+##################################################################
+
+requirements.yml
+
+collections:
+  - name: ansible.posix
+  - name: community.general
+
+##################################################################
+
+bindep.txt
+curl
+git
+
+ansible-builder build -t my-image-ee:1.0
+
+
+##################################################################
+
+
+
