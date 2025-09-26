@@ -23,5 +23,8 @@ collections:
 
 ansible-builder build -v3 -t custom-ee --container-runtime docker
 
+ansible-navigator run playbook.yml --execution-environment-image localhost/custom-ee:latest
+
+
 
 
